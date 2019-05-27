@@ -12,3 +12,4 @@ chown -R abc:abc /config/plex_autoscan
 ln -s /config/plex_autoscan/config.json /plex_autoscan/config/config.json || true
 ln -s /config/plex_autoscan/queue.db /plex_autoscan/queue.db || true
 ln -s /config/plex_autoscan/plex_autoscan.log /plex_autoscan/plex_autoscan.log || true
+ln -s /config/plex_autoscan/cache.db /plex_autoscan/cache.db || true
