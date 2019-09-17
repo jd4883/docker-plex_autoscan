@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Define Plex_autoscan branch
+case ${DOCKER_TAG} in
+    # Develop
+    "develop")
+        PLEX_AUTOSCAN_BRANCH="develop";;
+    # Everything else default to master
+    *)
+        PLEX_AUTOSCAN_BRANCH="master";;
+esac
+
+# Debug
+echo "Using BRANCH: ${SOURCE_BRANCH}"
+echo "Using COMMIT: ${SOURCE_COMMIT}"
+echo "Using PLEX_AUTOSCAN_BRANCH: ${PLEX_AUTOSCAN_BRANCH}"
+
+# Build
+docker build --pull --build-arg PLEX_AUTOSCAN_BRANCH=${PLEX_AUTOSCAN_BRANCH} -f "${DOCKERFILE_PATH}" -t "${IMAGE_NAME}" .

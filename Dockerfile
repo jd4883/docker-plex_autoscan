@@ -1,26 +1,31 @@
 FROM linuxserver/plex:latest
 
+ARG PLEX_AUTOSCAN_BRANCH="master"
+
 RUN \
   # Install dependencies
   apt-get update && \
   apt-get full-upgrade -y && \
   apt-get install --no-install-recommends -y \
     git \
-    python \
-    python-pip \
-    python-dev \
+    python3 \
+    python3-pip \
+    python3-dev \
     g++ && \
   # Get plex_autoscan
-  git clone --depth 1 --single-branch https://github.com/l3uddz/plex_autoscan.git /plex_autoscan && \
+  git clone --depth 1 --single-branch --branch ${PLEX_AUTOSCAN_BRANCH} https://github.com/l3uddz/plex_autoscan.git /plex_autoscan && \
   # Install/update pip and requirements
-  pip install --no-cache-dir --upgrade pip setuptools wheel && \
+  pip3 install --no-cache-dir --upgrade pip setuptools wheel && \
   # PIP upgrade bug https://github.com/pypa/pip/issues/5221
-  hash -r pip && \
-  pip install --no-cache-dir --upgrade -r /plex_autoscan/requirements.txt && \
+  hash -r pip3 && \
+  pip3 install --no-cache-dir --upgrade -r /plex_autoscan/requirements.txt && \
   # Remove dependencies
   apt-get purge -y --auto-remove \
-    python-dev \
+    git \
+    python3-dev \
     g++ && \
+  # Link python to python3
+  ln -s /usr/bin/python3 /usr/bin/python && \
   # Clean apt cache
   apt-get clean all && \
   rm -rf \

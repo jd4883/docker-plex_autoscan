@@ -28,7 +28,7 @@ PLEX_AUTOSCAN_LOGLEVEL
 ### Examples
 
 - Default config:
-```
+```shell
 docker create \
 --name=plex \
 --net=host \
@@ -43,7 +43,7 @@ horjulf/plex_autoscan
 ```
 
 - Increase plex_autoscan logging and use different config file:
-```
+```shell
 docker create \
 --name=plex \
 --net=host \
@@ -57,4 +57,12 @@ docker create \
 -v </path/to/movies>:/data/movies \
 -v </path/for/transcoding>:/transcode \
 horjulf/plex_autoscan
+```
+
+- Plex_autoscan config paths:
+```json
+"PLEX_SCANNER": "/usr/lib/plexmediaserver/Plex\\ Media\\ Scanner",
+"PLEX_SUPPORT_DIR": "/config/Library/Application\\ Support",
+"PLEX_LD_LIBRARY_PATH": "/usr/lib/plexmediaserver/lib",
+"PLEX_DATABASE_PATH": "/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
 ```
