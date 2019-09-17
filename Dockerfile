@@ -21,7 +21,6 @@ RUN \
   pip3 install --no-cache-dir --upgrade -r /plex_autoscan/requirements.txt && \
   # Remove dependencies
   apt-get purge -y --auto-remove \
-    git \
     python3-dev \
     g++ && \
   # Link python to python3
