@@ -1,39 +1,8 @@
 FROM linuxserver/plex:latest
 
 ARG PLEX_AUTOSCAN_BRANCH="master"
-
-RUN \
-  # Install dependencies
-  apt-get update && \
-  apt-get full-upgrade -y && \
-  apt-get install --no-install-recommends -y \
-    git \
-    python3 \
-    python3-pip \
-    python3-dev \
-    g++ && \
-  # Get plex_autoscan
-  git clone --depth 1 --single-branch --branch ${PLEX_AUTOSCAN_BRANCH} https://github.com/l3uddz/plex_autoscan.git /plex_autoscan && \
-  # Install/update pip and requirements
-  pip3 install --no-cache-dir --upgrade pip setuptools wheel && \
-  # PIP upgrade bug https://github.com/pypa/pip/issues/5221
-  hash -r pip3 && \
-  pip3 install --no-cache-dir --upgrade -r /plex_autoscan/requirements.txt && \
-  pip3 install --no-cache-dir --upgrade -r requirements.txt && \
-  # Remove dependencies
-  apt-get purge -y --auto-remove \
-    python3-dev \
-    g++ && \
-  # Link python to python3
-  ln -s /usr/bin/python3 /usr/bin/python && \
-  # Clean apt cache
-  apt-get clean all && \
-  rm -rf \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/*
-
-COPY root/ scripts /
+COPY root/ /
+COPY scripts/* /
 
 ENV \
   CRYPT_MAPPINGS="" \
@@ -43,23 +12,23 @@ ENV \
   GOOGLE_DRIVE_CLIENT_SECRET="" \
   GOOGLE_DRIVE_ENABLED=false \
   GOOGLE_DRIVE_FILE_EXTENSIONS=true \
-  GOOGLE_DRIVE_FILE_EXTENSIONS_LIST= \
+  GOOGLE_DRIVE_FILE_EXTENSIONS_LIST="" \
   GOOGLE_DRIVE_FILE_PATHS="" \
-  GOOGLE_DRIVE_MIME_TYPES= \
-  GOOGLE_DRIVE_MIME_TYPES_LIST= \
-  GOOGLE_DRIVE_POLL_INTERVAL= \
-  GOOGLE_DRIVE_SHOW_CACHE_LOGS= \
-  GOOGLE_DRIVE_TEAMDRIVE= \
-  GOOGLE_DRIVE_TEAMDRIVES= \
-  PLEX_ANALYZE_DIRECTORY= \
-  PLEX_ANALYZE_TYPE= \
-  PLEX_AUTOSCAN_CACHEFILE=/config/plex_autoscan/cache.db \
+  GOOGLE_DRIVE_MIME_TYPES="" \
+  GOOGLE_DRIVE_MIME_TYPES_LIST="" \
+  GOOGLE_DRIVE_POLL_INTERVAL=60 \
+  GOOGLE_DRIVE_SHOW_CACHE_LOGS=false \
+  GOOGLE_DRIVE_TEAMDRIVE="" \
+  GOOGLE_DRIVE_TEAMDRIVES="" \
+  PLEX_ANALYZE_DIRECTORY="" \
+  PLEX_ANALYZE_TYPE="" \
+  PLEX_AUTOSCAN_CACHEFILE=/config/cache.db \
   # Plex_autoscan cache db
-  PLEX_AUTOSCAN_CONFIG=/config/plex_autoscan/config.json \
+  PLEX_AUTOSCAN_CONFIG=/config/config.json \
   # Plex_autoscan config file
-  PLEX_AUTOSCAN_LOGFILE=/config/plex_autoscan/plex_autoscan.log \
+  PLEX_AUTOSCAN_LOGFILE=/config/plex_autoscan.log \
   # Plex_autoscan log file
-  PLEX_AUTOSCAN_QUEUEFILE=/config/plex_autoscan/queue.db \
+  PLEX_AUTOSCAN_QUEUEFILE=/config/queue.db \
   # Plex_autoscan queue db
   PLEX_CHECK_BEFORE_SCAN=false \
   PLEX_DATABASE_PATH="/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db" \
@@ -98,4 +67,34 @@ ENV \
   USE_DOCKER=false \
   USE_SUDO=false
 
-RUN python3 scripts/config_builder.py
+
+RUN \
+  # Install dependencies
+  apt-get update && \
+  apt-get full-upgrade -y && \
+  apt-get install --no-install-recommends -y \
+    git \
+    python3 \
+    python3-pip \
+    python3-dev \
+    g++ && \
+  # Get plex_autoscan
+  git clone --depth 1 --single-branch --branch ${PLEX_AUTOSCAN_BRANCH} https://github.com/l3uddz/plex_autoscan.git /plex_autoscan && \
+  # Install/update pip and requirements
+  pip3 install --no-cache-dir --upgrade pip setuptools wheel && \
+  # PIP upgrade bug https://github.com/pypa/pip/issues/5221
+  hash -r pip3 && \
+  pip3 install --no-cache-dir --upgrade -r /plex_autoscan/requirements.txt && \
+   python3 /config_builder.py && \
+  # Remove dependencies
+  apt-get purge -y --auto-remove \
+    python3-dev \
+    g++ && \
+  # Link python to python3
+  ln -s /usr/bin/python3 /usr/bin/python && \
+  # Clean apt cache
+  apt-get clean all && \
+  rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*

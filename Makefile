@@ -1,4 +1,4 @@
-IMAGE_NAME := docker-plex_autoscan
+IMAGE_NAME := docker-plex-autoscan
 VERSION := latest
 REGISTRY_ADDR := jb6magic
 

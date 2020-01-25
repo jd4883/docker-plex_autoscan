@@ -13,12 +13,9 @@ def set_value(environ, default):
 
 if __name__ == "__main__":
 	default_file_extensions = ["webm", "mkv", "flv", "vob", "ogv", "ogg", "drc", "gif", "gifv", "mng", "avi", "mov",
-	                           "qt",
-	                           "wmv", "yuv", "rm", "rmvb", "asf", "amv", "mp4", "m4p", "m4v", "mpg", "mp2", "mpeg",
-	                           "mpe",
-	                           "mpv", "m2v", "m4v", "svi", "3gp", "3g2", "mxf", "roq", "nsv", "f4v", "f4p", "f4a",
-	                           "f4b",
-	                           "mp3", "flac", "ts"]
+	                           "qt", "wmv", "yuv", "rm", "rmvb", "asf", "amv", "mp4", "m4p", "m4v", "mpg", "mp2",
+	                           "mpeg", "mpe", "mpv", "m2v", "m4v", "svi", "3gp", "3g2", "mxf", "roq", "nsv", "f4v",
+	                           "f4p", "f4a", "f4b", "mp3", "flac", "ts"]
 	default_db_path = str("/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db")
 	default_mime_types = list().append("video")
 	default_plex_empty_trash_control_files = list().append("/mnt/unionfs/mounted.bin")
@@ -30,7 +27,7 @@ if __name__ == "__main__":
 	default_server_ignore_list = ["/.grab/", ".DS_Store", "Thumbs.db"]
 	default_server_ip = str("0.0.0.0")
 	default_server_pass = str("ChangeMe")
-	default_server_scan_priorities = {"1":["/Movies/"],"2":["/TV/"]}
+	default_server_scan_priorities = { "1": ["/Movies/"], "2": ["/TV/"] }
 	
 	config = dict()
 	config["DOCKER_NAME"] = set_value("DOCKER_NAME", "plex")
@@ -72,7 +69,8 @@ if __name__ == "__main__":
 	config["RCLONE"]["CRYPT_MAPPINGS"] = set_value("CRYPT_MAPPINGS", dict())
 	config["RCLONE"]["RC_CACHE_REFRESH"] = dict()
 	config["RCLONE"]["RC_CACHE_REFRESH"]["ENABLED"] = set_value("RCLONE_CACHE_REFRESH_ENABLED", bool())
-	config["RCLONE"]["RC_CACHE_REFRESH"]["FILE_EXISTS_TO_REMOTE_MAPPINGS"] = set_value("RCLONE_CACHE_REFRESH_FILE_EXISTS_TO_REMOTE_MAPPINGS", dict())
+	config["RCLONE"]["RC_CACHE_REFRESH"]["FILE_EXISTS_TO_REMOTE_MAPPINGS"] = set_value(
+		"RCLONE_CACHE_REFRESH_FILE_EXISTS_TO_REMOTE_MAPPINGS", dict())
 	# this should be a key value pair, with the value being provided as a list
 	config["RCLONE"]["RC_URL"] = set_value("RCLONE_URL", str("http://localhost:5572"))
 	config["RUN_COMMAND_BEFORE_SCAN"] = set_value("RUN_COMMAND_BEFORE_SCAN", str())
@@ -94,6 +92,11 @@ if __name__ == "__main__":
 	config["SERVER_USE_SQLITE"] = set_value("SERVER_USE_SQLITE", bool(True))
 	config["USE_DOCKER"] = set_value("USE_DOCKER", bool())
 	config["USE_SUDO"] = set_value("USE_SUDO", bool())
+	
+	empty_keys = [k for k, v in config.items() if not v]
+	for k in empty_keys:
+		del config[k]
+	
 	base_plex_autoscan_config = set_value("PLEX_AUTOSCAN_CONFIG", str("config.json"))
 	
-	json.dump(config, open(Path(base_plex_autoscan_config), "w+"), indent=4, sort_keys=True)
+	json.dump(config, open(Path(base_plex_autoscan_config), "w+"), indent = 4, sort_keys = True)
